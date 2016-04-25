@@ -13,8 +13,8 @@ import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 
-IMAGE_SIZE_X = 80
-IMAGE_SIZE_Y = 60
+IMAGE_SIZE_X = 600
+IMAGE_SIZE_Y = 450
 
 NUM_CLASSES = 10
 NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 998
@@ -33,6 +33,8 @@ def read_cifar10(path):
   result.height = 600
   result.width = 800
   result.depth = 3
+  #IMAGE_PIXELS = 600*800*3
+  #batch_size = 128
   path_train = "/project/cifar10/images/train/"
   path_test = "/project/cifar10/images/test/"
   if path == "train":

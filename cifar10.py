@@ -49,7 +49,8 @@ import cifar10_input
 FLAGS = tf.app.flags.FLAGS
 
 # Basic model parameters.
-tf.app.flags.DEFINE_integer('batch_size', 128)
+tf.app.flags.DEFINE_integer('batch_size', 128,
+                            """Number of images to process in a batch.""")
 
 # Global constants describing the CIFAR-10 data set.
 IMAGE_SIZE_X = cifar10_input.IMAGE_SIZE_X
