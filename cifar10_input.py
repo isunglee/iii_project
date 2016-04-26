@@ -38,29 +38,29 @@ def read_cifar10(path):
   path_train = "/project/cifar10/images/train/"
   path_test = "/project/cifar10/images/test/"
   if path == "train":
-    path = path_train
+    path_new = path_train
   else:
-    path = path_test
+    path_new = path_test
     
-  for root, dirs, files in os.walk(path):
+  for root, dirs, files in os.walk(path_new):
     
     for f in files:
         try:
-            path = os.path.join(root, f)
+            path_i = os.path.join(root, f)
             if root.split('/')[-1] == 'expressionism':
-                image = Image.open(path)
+                image = Image.open(path_i)
                 array_3 = np.array(image)
                 array_1 = np.reshape(array_3,result.width*result.height*result.depth)
                 images.append(array_1)
                 labels.append(0)           
             elif root.split('/')[-1] == 'impressionism':
-                image = Image.open(path)
+                image = Image.open(path_i)
                 array_3 = np.array(image)
                 array_1 = np.reshape(array_3,result.width*result.height*result.depth)
                 images.append(array_1)
                 labels.append(1) 
             elif root.split('/')[-1] == 'postImpressionism':
-                image = Image.open(path)
+                image = Image.open(path_i)
                 array_3 = np.array(image)
                 array_1 = np.reshape(array_3,result.width*result.height*result.depth)
                 images.append(array_1)
@@ -70,10 +70,11 @@ def read_cifar10(path):
   dic = {'labels':labels, 'data':images}
 
 
-  result.label = tf.placeholder(tf.int32)
-  result.uint8image = tf.placeholder(tf.int32)
-  feed_dict = {result.label:dic['labels'], result.uint8image:dic['data']}
-
+  labels = tf.placeholder(tf.int32, shape=[None, 1])
+  images = tf.placeholder(tf.int32, shape=[None, result.height*result.width*result.depth])
+  feed_dict = {labels:dic['labels'], images:dic['data']}
+  result.uint8image = tf.reshape(images, [result.height, result.width, result.depth])
+  result.label = labels
   return result
 
 
@@ -93,7 +94,7 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
   """
   # Create a queue that shuffles the examples, and then
   # read 'batch_size' images + labels from the example queue.
-  num_preprocess_threads = 16
+  num_preprocess_threads = 5
   if shuffle:
     images, label_batch = tf.train.shuffle_batch(
         [image, label],
